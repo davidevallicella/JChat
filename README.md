@@ -3,11 +3,12 @@ JChat
 
 Simple Java RMI chat.
 
-# Main features
+## Main features
 
-	1.	Two types of users (normal and Admin)   
-	2.	Authentication Server
-	3.	Public and private chat
-	4.	Minimal client  
+	1.	Two types of users (normal and Admin)
+	2.	Minimal Client
+	3.	Authentication Server
+	4.	Public and private chat
+	5.	Remote error management  
 
 Original author: [Davide Vallicella](mailto:vallicella.davide@gmail.com)
