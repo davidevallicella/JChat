@@ -9,3 +9,6 @@ Main features:
   • Authentication Server
   • Public and private chat
   • Error Handling
+  
+  
+  Original author: Davide Vallicella (vallicella.davide@gmail.com)
