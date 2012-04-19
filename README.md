@@ -10,4 +10,4 @@ Simple Java RMI chat.
 	3.	Public and private chat
 	4.	Minimal client  
 
-Original author: Davide Vallicella (vallicella.davide@gmail.com)
+Original author: [Davide Vallicella](mailto:vallicella.davide@gmail.com)
