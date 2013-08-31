@@ -29,7 +29,9 @@ import com.cellasoft.jchat.utils.Utils;
  */
 public class Setup {
 
-    private static final int port = 1098;
+    private static final int rmid_port = 1098;
+    private static final int codebase_port = 8000;
+    private static final int truststorePass = "123456";
 
     public static void main(String args[]) {
 
@@ -38,9 +40,8 @@ public class Setup {
 
         String policySetup = "file://" + local_dir + "/chat/setup.policy";
         String policyGroup = "file://" + local_dir + "/chat/group.policy";
-        String truststorePass = "123456";
 
-        String codebase = "http://" + Utils.getIP() + ":8000/common/";
+        String codebase = "http://" + Utils.getIP() + ":" + codebase_port + "/common/";
         String implCodebase = "file://" + home_dir + "/impl_server/";
 
         String server_centrale = "chat.CentralServer";
@@ -78,17 +79,16 @@ public class Setup {
             ServerInterface stub_server = (ServerInterface) Activatable.register(dsServer);
             System.out.println("E' stato creato l'activation descriptor del Server Centrale che e' stato registrato col demone d'attivazione");
 
-
-
             ActivationDesc dsAuth = new ActivationDesc(AUTH_ACTIVATION_GROUP_ID, server_auth, implCodebase, new MarshalledObject(stub_server));
             LoginProxyInterface stub_auth = (LoginProxyInterface) Activatable.register(dsAuth);
             System.out.println("E' stato creato l'activation descriptor del Server di Autenticazione che e' stato registrato col demone d'attivazione");
             System.out.println("Il server attivabile adesso puo' essere acceduto attraverso lo stub: " + stub_auth);
 
             System.out.println("Faccio il rebinding dello stub del Server di "
-                    + "Autenticazione nel registro RMI alla porta 1098 dove gia'"
-                    + " si trova registrato il sistema di attivazione ");
-            Naming.rebind("//" + Utils.getIP() + ":" + port + "/AuthServer", stub_auth);
+                             + "Autenticazione nel registro RMI alla porta 1098 dove già "
+                             + "si trova registrato il sistema di attivazione ");
+                            
+            Naming.rebind("//" + Utils.getIP() + ":" + rmid_port + "/AuthServer", stub_auth);
             System.out.println("Rebinding effettuata con successo!\nFine setup.");
 
         } catch (UnknownGroupException ex) {
