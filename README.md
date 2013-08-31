@@ -15,16 +15,22 @@ Simple Java RMI chat.
 
 ## Schema
 
-![Screen shot 1](/davidevallicella/JChat/blob/master/splash/structure.png?raw=true)
+![Example Image][1]
 
 ## What it looks like
 
-![Screen shot 2](/davidevallicella/JChat/blob/master/splash/login.png?raw=true)
+![Example Image][2]
 
-![Screen shot 3](/davidevallicella/JChat/blob/master/splash/chat.png?raw=true)
+![Example Image][3]
 
-![Screen shot 4](/davidevallicella/JChat/blob/master/splash/chatprivata.png?raw=true)
+![Example Image][4]
 
-![Screen shot 5](/davidevallicella/JChat/blob/master/splash/kick.png?raw=true)
+![Example Image][5]
 
 Original author: [Davide Vallicella](mailto:vallicella.davide@gmail.com)
+
+ [1]: https://raw.github.com/davidevallicella/JChat/master/splash/structure.png
+ [2]: https://raw.github.com/davidevallicella/JChat/master/splash/login.png
+ [3]: https://raw.github.com/davidevallicella/JChat/master/splash/chat.png
+ [4]: https://raw.github.com/davidevallicella/JChat/master/splash/chatprivata.png
+ [5]: https://raw.github.com/davidevallicella/JChat/master/splash/kick.png
