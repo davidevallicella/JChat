@@ -1,4 +1,3 @@
-
 package com.cellasoft.jchat.server;
 
 import java.rmi.MarshalledObject;
@@ -38,16 +37,11 @@ import com.cellasoft.jchat.utils.Utils;
  */
 public class CentralServer extends Activatable implements ServerInterface, Unreferenced {
 
-	private static final long serialVersionUID = -4885180016006885657L;
-	private static final String NO_SUCH_OBJECT_EXCEPTION = 
-            "Central Server [unreferenced]: "
-            + "Il server non è stato esportato correttamente.";
-    private static final String REMOTE_EXCEPTION = 
-            "Central Server [unreferenced]: Errore remoto.";
-    private static final String UN_KNOWN_OBJECT_EXCEPTION = 
-            "Central Server [unreferenced]: Il server è già inattivo.";
-    private static final String ACTIVATION_EXCEPTION =
-            "Central Server [unreferenced]: Il gruppo di attivazione non è attivo.";
+    private static final long serialVersionUID = -4885180016006885657L;
+    private static final String NO_SUCH_OBJECT_EXCEPTION = "Central Server [unreferenced]: Il server non è stato esportato correttamente.";
+    private static final String REMOTE_EXCEPTION = "Central Server [unreferenced]: Errore remoto.";
+    private static final String UN_KNOWN_OBJECT_EXCEPTION = "Central Server [unreferenced]: Il server è già inattivo.";
+    private static final String ACTIVATION_EXCEPTION = "Central Server [unreferenced]: Il gruppo di attivazione non è attivo.";
     
     private static int port = 5432;
     private MyHashtable userList;
@@ -88,8 +82,7 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
                                                         ClientBannedException, 
                                                         ClientConnectException {
         if (!isActive) {
-            throw new ClientConnectException(
-                    "Il server di chat non è ancora attivo"
+            throw new ClientConnectException("Il server di chat non è ancora attivo"
                     + "..attendere ancora qualche secondo e riprovare.");
         }
         try {
@@ -100,20 +93,16 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
 
                 String nick = user.getUsername();
                 if (bannedList.contains(nick)) {
-                    throw new ClientBannedException("L'utente " 
-                                                    + nick 
-                                                    + " è stato bannato!");
+                    throw new ClientBannedException("L'utente " + nick + " è stato bannato!");
                 }
                 if (userList.containsKey(nick)) {
-                    throw new ClientConnectException("L'utente " 
-                                                    + nick + 
-                                                    " è già connesso!");
+                    throw new ClientConnectException("L'utente " + nick + " è già connesso!");
                 } else {
                     userList.put(nick, user);
                     broadcastMessage(new Message("Connesso.",
-                                                nick,
-                                                Utils.getDate(),
-                                                Message.CONNECT_MESSAGE));
+                                                 nick,
+                                                 Utils.getDate(),
+                                                 Message.CONNECT_MESSAGE));
                 }
                 if (!ping.isAlive()) {
                     ping.start();
@@ -141,9 +130,9 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
         if (userList.containsKey(nick)) {
             userList.remove(nick);
             broadcastMessage(new Message("Disconnesso.", 
-                                        nick, 
-                                        Utils.getDate(),
-                                        Message.DISCONNECT_MESSAGE));
+                                         nick, 
+                                         Utils.getDate(),
+                                         Message.DISCONNECT_MESSAGE));
             
         }
     }
@@ -167,13 +156,10 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
                 for (Iterator<MobileServer> it = userList.values().iterator(); it.hasNext();) {
                     MobileServer receiver = it.next();
                     if (!sender.equals(receiver.getUsername())) {
-                        SendMessageThread t = new SendMessageThread(
-                                                    receiver, 
-                                                    new Message(msg.getMessage(), 
-                                                    sender, 
-                                                    Utils.getDate(), 
-                                                    msg.getType()));
-                        t.start();
+                        new SendMessageThread(receiver, new Message(msg.getMessage(), 
+	                                                            sender, 
+	                                            	  	    Utils.getDate(), 
+	                                            		    msg.getType())).start();
                     }
                 }
 
@@ -211,15 +197,12 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
         if (userList.containsKey(nick)) {
             MobileServer user = userList.get(nick);
             disconnect(user);
-            SendMessageThread t = new SendMessageThread(user, new Message(
-                                                        "Sei stato disconnesso!",
-                                                        toString(),
-                                                        Utils.getDate(),
-                                                        Message.KICK_MESSAGE));
-            t.start();
+            new SendMessageThread(user,	new Message("Sei stato disconnesso!",
+                                        	    toString(),
+                                        	    Utils.getDate(),
+                                		    Message.KICK_MESSAGE)).start();
         } else {
-            throw new ClientKickException(nick 
-                    + " non esiste o non è attualmente connesso.");
+            throw new ClientKickException(nick + " non esiste o non è attualmente connesso.");
         }
     }
 
@@ -248,16 +231,15 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
     @Override
     public void unreferenced() {
         try {
-            System.out.println("Central Server: non ci sono piu client remoti,"
-                    + " disattivo il server attivabile.");
+            System.out.println("Central Server: non ci sono piu client remoti, disattivo il server attivabile.");
 
             if (unexportObject(this, true)) {
                 isActive = !inactive(getID());
                 System.out.println("Il Server Centrale è attivo? " + isActive);
             }
-
-            System.gc();
-            System.out.println("############### Server Centrale Inattivo ###############\n");
+           
+            if(!isActive)
+                System.out.println("############### Server Centrale Inattivo ###############\n");
         } catch (NoSuchObjectException ex) {
             System.out.println(NO_SUCH_OBJECT_EXCEPTION);
         } catch (RemoteException ex) {
@@ -266,8 +248,9 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
             System.out.println(UN_KNOWN_OBJECT_EXCEPTION);
         } catch (ActivationException ex) {
             System.out.println(ACTIVATION_EXCEPTION);
+        } finally {
+       	    System.gc();
         }
-
     }
 
     private void initResource() {
@@ -288,9 +271,7 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
      * messaggio errore nel caso in cui il client non esista o non sia attualmente connesso
      * @throws RemoteException eccezione remota
      */
-    public synchronized String privateChat(final MobileServer 
-                                            builder, 
-                                            String nick) throws RemoteException {
+    public synchronized String privateChat(final MobileServer builder, String nick) throws RemoteException {
         if (userList.containsKey(nick)) {
             final MobileServer user = userList.get(nick);
             Thread confirm = new Thread() {
@@ -304,8 +285,7 @@ public class CentralServer extends Activatable implements ServerInterface, Unref
                             builder.sendPrivateChatRef(null);
                         }
                     } catch (RemoteException ex) {
-                        System.out.println("Problema a contattare l'utente!:\n"
-                                + ex.getMessage());
+                        System.out.println("Problema a contattare l'utente!:\n" + ex.getMessage());
                     }
                 }
             };
