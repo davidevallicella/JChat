@@ -29,16 +29,7 @@ import com.cellasoft.jchat.utils.Utils;
  */
 public class Setup {
 
-    public static ActivationGroupID SERVER_ACTIVATION_GROUP_ID;
-    public static ActivationGroupID AUTH_ACTIVATION_GROUP_ID;
-    private static Properties serverProp;
-    private static Properties authProp;
-    private static String server_centrale;
-    private static String server_auth;
-    private static String codebase;
-    private static String implCodebase;
-    private static LoginProxyInterface stub_auth;
-    private static int port = 1098;
+    private static final int port = 1098;
 
     public static void main(String args[]) {
 
@@ -49,11 +40,11 @@ public class Setup {
         String policyGroup = "file://" + local_dir + "/chat/group.policy";
         String truststorePass = "123456";
 
-        codebase = "http://" + Utils.getIP() + ":8000/common/";
-        implCodebase = "file://" + home_dir + "/impl_server/";
+        String codebase = "http://" + Utils.getIP() + ":8000/common/";
+        String implCodebase = "file://" + home_dir + "/impl_server/";
 
-        server_centrale = "chat.CentralServer";
-        server_auth = "chat.AuthenticationServer";
+        String server_centrale = "chat.CentralServer";
+        String server_auth = "chat.AuthenticationServer";
 
         if (System.getSecurityManager() == null) {
             System.setProperty("java.rmi.server.codebase", codebase);
@@ -61,14 +52,14 @@ public class Setup {
             System.setSecurityManager(new RMISecurityManager());
         }
 
-        serverProp = new Properties();
+        Properties serverProp = new Properties();
         serverProp.put("javax.net.ssl.trustStore", "truststore");
         serverProp.put("javax.net.ssl.trustStorePassword", truststorePass);
         serverProp.put("java.security.policy", policyGroup);
         serverProp.put("chat.impl.codebase", implCodebase);
         serverProp.put("java.class.path", "no_classpath");
 
-        authProp = new Properties();
+        Properties authProp = new Properties();
         authProp.put("java.security.policy", policyGroup);
         authProp.put("chat.impl.codebase", implCodebase);
         authProp.put("java.class.path", "no_classpath");
@@ -78,9 +69,9 @@ public class Setup {
         ActivationGroupDesc dsAuthGroup = new ActivationGroupDesc(authProp, null);
 
         try {
-            SERVER_ACTIVATION_GROUP_ID = ActivationGroup.getSystem().registerGroup(dsServerGroup);
+            ActivationGroupID SERVER_ACTIVATION_GROUP_ID = ActivationGroup.getSystem().registerGroup(dsServerGroup);
             System.out.println("Il gruppo del Server Centrale e' stato creato,  registrato col sistema d'attivazione, ed ha identificativo = " + SERVER_ACTIVATION_GROUP_ID.hashCode());
-            AUTH_ACTIVATION_GROUP_ID = ActivationGroup.getSystem().registerGroup(dsAuthGroup);
+            ActivationGroupID AUTH_ACTIVATION_GROUP_ID = ActivationGroup.getSystem().registerGroup(dsAuthGroup);
             System.out.println("Il gruppo del Server di Autenticazione e' stato creato,  registrato col sistema d'attivazione, ed ha identificativo = " + AUTH_ACTIVATION_GROUP_ID.hashCode());
 
             ActivationDesc dsServer = new ActivationDesc(SERVER_ACTIVATION_GROUP_ID, server_centrale, implCodebase, null);
@@ -90,7 +81,7 @@ public class Setup {
 
 
             ActivationDesc dsAuth = new ActivationDesc(AUTH_ACTIVATION_GROUP_ID, server_auth, implCodebase, new MarshalledObject(stub_server));
-            stub_auth = (LoginProxyInterface) Activatable.register(dsAuth);
+            LoginProxyInterface stub_auth = (LoginProxyInterface) Activatable.register(dsAuth);
             System.out.println("E' stato creato l'activation descriptor del Server di Autenticazione che e' stato registrato col demone d'attivazione");
             System.out.println("Il server attivabile adesso puo' essere acceduto attraverso lo stub: " + stub_auth);
 
