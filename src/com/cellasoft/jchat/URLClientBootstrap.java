@@ -25,9 +25,8 @@ public class URLClientBootstrap {
      * main del Bootstrap.
      *
      * @param args il vettore degli argomenti passati all'avvio
-     * @throws Exception eccezione sollevata dalla classe RMIClassLoader
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
         String local_dir = System.getProperty("user.dir");
